@@ -16,6 +16,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { GeneraType, PokemonInfo, SpriteType } from "./types";
+import { redirect } from "next/navigation";
 
 import styles from "./page.module.css";
 
@@ -67,6 +68,7 @@ export default function SpecificPokemonPage() {
       } catch (error) {
         console.error(error);
         setPokemonInfo(null);
+        redirect("/pokemon");
       }
     };
     fetchInfo();
