@@ -13,8 +13,7 @@ import {
 } from "@mui/material";
 import { pokemonService } from "components/services";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { GeneraType, PokemonInfo, SpriteType } from "./types";
 import { redirect } from "next/navigation";
 
@@ -22,6 +21,7 @@ import styles from "./page.module.css";
 
 export default function SpecificPokemonPage() {
   const params = useParams();
+  const router = useRouter();
 
   const [pokemonInfo, setPokemonInfo] = useState<PokemonInfo | null>(null);
   const [imageType, setImageType] = useState<keyof SpriteType>("front_default");
@@ -75,10 +75,14 @@ export default function SpecificPokemonPage() {
     fetchInfo();
   }, [params]);
 
+  const goBack = () => {
+    router.back();
+  };
+
   return (
     <div>
       <main className={styles.content}>
-        <Link href={"/pokemon"}>Back to list</Link>
+        <Button onClick={goBack}>Back to list</Button>
         {!pokemonInfo ? (
           <div>Loading...</div>
         ) : (
@@ -175,7 +179,6 @@ export default function SpecificPokemonPage() {
           </Box>
         )}
       </main>
-      <footer></footer>
     </div>
   );
 }

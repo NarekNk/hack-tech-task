@@ -1,12 +1,14 @@
 "use client";
+import { useCallback, useEffect, useState } from "react";
 import { pokemonService } from "components/services";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { getPokemonImageUrl } from "./helpers";
 
+import { getPokemonImageUrl } from "./helpers";
 import styles from "./page.module.css";
 import { Pagination, Typography } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 type Pokemon = {
   name: string;
@@ -18,11 +20,17 @@ type Pokemon = {
 const pageSize = 12;
 
 export default function PokemonListPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [pokemons, setPokemons] = useState<Pokemon[] | null>(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(
+    searchParams?.get("page") ? Number(searchParams.get("page")) : 1
+  );
   const [totalPages, setTotalPages] = useState(0);
 
   const onPageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    router.replace(`/pokemon?page=${value}`);
     setPage(value);
   };
 
@@ -92,7 +100,6 @@ export default function PokemonListPage() {
           </>
         )}
       </main>
-      <footer></footer>
     </div>
   );
 }
