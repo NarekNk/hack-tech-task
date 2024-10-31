@@ -156,10 +156,10 @@ export default function SpecificPokemonPage() {
                     display="flex"
                     justifyContent="space-between"
                   >
+                    <Typography variant="body1">{stat.stat.name}</Typography>
                     <Typography variant="body1">
-                      {stat.stat.name}/100
+                      {stat.base_stat}/100
                     </Typography>
-                    <Typography variant="body1">{stat.base_stat}</Typography>
                   </Box>
                 ))}
               </Box>
