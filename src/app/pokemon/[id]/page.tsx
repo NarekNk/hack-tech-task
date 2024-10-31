@@ -38,6 +38,12 @@ type AbilityType = {
   };
 };
 
+type GeneraType = {
+  language: {
+    name: string;
+  };
+};
+
 type PokemonInfo = {
   sprites: SpriteType;
   height: number;
@@ -82,8 +88,9 @@ export default function SpecificPokemonPage() {
         setDescription(descriptionData?.flavor_text_entries?.[0]?.flavor_text);
         setAdditionalInfo(
           `This Pokémon belongs to the ${
-            descriptionData.genera.find((g: any) => g.language.name === "en")
-              .genus
+            descriptionData.genera.find(
+              (g: GeneraType) => g.language.name === "en"
+            ).genus
           } category.`
         );
       } catch (error) {
