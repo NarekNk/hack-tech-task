@@ -14,44 +14,10 @@ import {
 import { pokemonService } from "components/services";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import Link from "next/link";
+import { GeneraType, PokemonInfo, SpriteType } from "./types";
 
 import styles from "./page.module.css";
-import Link from "next/link";
-
-type StatType = {
-  base_stat: number;
-  effort: number;
-  stat: {
-    name: string;
-    url: string;
-  };
-};
-
-type SpriteType = {
-  back_default: string | null;
-  front_default: string | null;
-};
-
-type AbilityType = {
-  ability: {
-    name: string;
-  };
-};
-
-type GeneraType = {
-  language: {
-    name: string;
-  };
-};
-
-type PokemonInfo = {
-  sprites: SpriteType;
-  height: number;
-  weight: number;
-  name: string;
-  abilities: AbilityType[];
-  stats: StatType[];
-};
 
 export default function SpecificPokemonPage() {
   const params = useParams();
@@ -62,8 +28,6 @@ export default function SpecificPokemonPage() {
   const [description, setDescription] = useState("");
   const [additionalInfo, setAdditionalInfo] = useState("");
 
-  console.log(description, additionalInfo);
-
   const onImageTypeChange = (type: keyof SpriteType) => {
     setImageType(type);
   };
@@ -73,26 +37,34 @@ export default function SpecificPokemonPage() {
       return;
     }
 
+    const fetchAdditionalInfo = async (name: string) => {
+      try {
+        const data = await pokemonService.getPokemonDescription({
+          name: name,
+        });
+
+        setDescription(data?.flavor_text_entries?.[0]?.flavor_text);
+        setAdditionalInfo(
+          `This Pokémon belongs to the ${
+            data.genera.find((g: GeneraType) => g.language.name === "en").genus
+          } category.`
+        );
+      } catch (error) {
+        console.error(error);
+        setDescription("");
+        setAdditionalInfo("");
+      }
+    };
+
     const fetchInfo = async () => {
       try {
         const data = await pokemonService.getPokemonInfo({
           id: String(params.id),
         });
 
-        const descriptionData = await pokemonService.getPokemonDescription({
-          name: data.name,
-        });
+        await fetchAdditionalInfo(data.name);
 
         setPokemonInfo(data);
-
-        setDescription(descriptionData?.flavor_text_entries?.[0]?.flavor_text);
-        setAdditionalInfo(
-          `This Pokémon belongs to the ${
-            descriptionData.genera.find(
-              (g: GeneraType) => g.language.name === "en"
-            ).genus
-          } category.`
-        );
       } catch (error) {
         console.error(error);
         setPokemonInfo(null);
@@ -109,7 +81,7 @@ export default function SpecificPokemonPage() {
           <div>Loading...</div>
         ) : (
           <Box className={styles.pokemonInfo}>
-            <Typography variant="h5">{pokemonInfo.name} Info</Typography>
+            <Typography variant="h4">{pokemonInfo.name} Info</Typography>
             <Box display="flex" gap={4} mb={3}>
               <Box>
                 {pokemonInfo.sprites[imageType] && (
@@ -190,12 +162,14 @@ export default function SpecificPokemonPage() {
               </Box>
             </Box>
 
-            <Box>
-              <Typography variant="h6">Description</Typography>
+            {description && additionalInfo && (
+              <Box>
+                <Typography variant="h6">Description</Typography>
 
-              <Typography variant="body1">{description}</Typography>
-              <Typography variant="body2">{additionalInfo}</Typography>
-            </Box>
+                <Typography variant="body1">{description}</Typography>
+                <Typography variant="body2">{additionalInfo}</Typography>
+              </Box>
+            )}
           </Box>
         )}
       </main>

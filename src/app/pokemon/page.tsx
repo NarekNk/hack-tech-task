@@ -18,7 +18,7 @@ type Pokemon = {
 const pageSize = 12;
 
 export default function PokemonListPage() {
-  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [pokemons, setPokemons] = useState<Pokemon[] | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -44,7 +44,7 @@ export default function PokemonListPage() {
       setTotalPages(Math.ceil(data.count / pageSize));
     } catch (error) {
       setPage(1);
-      setPokemons([]);
+      setPokemons(null);
       setTotalPages(0);
       console.error(error);
     }
@@ -60,27 +60,37 @@ export default function PokemonListPage() {
         <Typography variant="h4">Pokemon List page</Typography>
       </header>
       <main className={styles.content}>
-        <ul className={styles.pokemonList}>
-          {pokemons.map((pokemon) => (
-            <li key={pokemon.name}>
-              <Link
-                href={`/pokemon/${pokemon.id}`}
-                className={styles.pokemonListItem}
-              >
-                <Image
-                  src={pokemon.imageUrl}
-                  alt={pokemon.name}
-                  width={100}
-                  height={100}
-                  loading="lazy"
-                />
-                {pokemon.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {!pokemons ? (
+          <Typography variant="h6">Loading pokemons...</Typography>
+        ) : (
+          <>
+            <ul className={styles.pokemonList}>
+              {pokemons.map((pokemon) => (
+                <li key={pokemon.name}>
+                  <Link
+                    href={`/pokemon/${pokemon.id}`}
+                    className={styles.pokemonListItem}
+                  >
+                    <Image
+                      src={pokemon.imageUrl}
+                      alt={pokemon.name}
+                      width={100}
+                      height={100}
+                      loading="lazy"
+                    />
+                    {pokemon.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
 
-        <Pagination count={totalPages} page={page} onChange={onPageChange} />
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={onPageChange}
+            />
+          </>
+        )}
       </main>
       <footer></footer>
     </div>
