@@ -1,0 +1,25 @@
+.pageHeader {
+  padding: 1rem;
+}
+
+.content {
+  padding: 1rem;
+}
+
+.pokemonList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  list-style: none;
+  margin-bottom: 1rem;
+}
+
+.pokemonListItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-weight: 600;
+}
