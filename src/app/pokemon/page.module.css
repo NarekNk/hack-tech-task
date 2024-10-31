@@ -22,4 +22,9 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.pokemonListItem:hover {
+  transform: scale(1.05);
 }

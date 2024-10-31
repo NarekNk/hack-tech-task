@@ -50,7 +50,6 @@ export default function SpecificPokemonPage() {
           } category.`
         );
       } catch (error) {
-        console.error(error);
         setDescription("");
         setAdditionalInfo("");
       }
