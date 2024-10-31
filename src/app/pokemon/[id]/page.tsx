@@ -53,6 +53,11 @@ export default function SpecificPokemonPage() {
   const [pokemonInfo, setPokemonInfo] = useState<PokemonInfo | null>(null);
   const [imageType, setImageType] = useState<keyof SpriteType>("front_default");
 
+  const [description, setDescription] = useState("");
+  const [additionalInfo, setAdditionalInfo] = useState("");
+
+  console.log(description, additionalInfo);
+
   const onImageTypeChange = (type: keyof SpriteType) => {
     setImageType(type);
   };
@@ -67,7 +72,20 @@ export default function SpecificPokemonPage() {
         const data = await pokemonService.getPokemonInfo({
           id: String(params.id),
         });
+
+        const descriptionData = await pokemonService.getPokemonDescription({
+          name: data.name,
+        });
+
         setPokemonInfo(data);
+
+        setDescription(descriptionData?.flavor_text_entries?.[0]?.flavor_text);
+        setAdditionalInfo(
+          `This Pokémon belongs to the ${
+            descriptionData.genera.find((g: any) => g.language.name === "en")
+              .genus
+          } category.`
+        );
       } catch (error) {
         console.error(error);
         setPokemonInfo(null);
@@ -146,7 +164,7 @@ export default function SpecificPokemonPage() {
               </Box>
             </Box>
 
-            <Box>
+            <Box mb={3}>
               <Typography variant="h6">Stats</Typography>
 
               <Box>
@@ -163,6 +181,13 @@ export default function SpecificPokemonPage() {
                   </Box>
                 ))}
               </Box>
+            </Box>
+
+            <Box>
+              <Typography variant="h6">Description</Typography>
+
+              <Typography variant="body1">{description}</Typography>
+              <Typography variant="body2">{additionalInfo}</Typography>
             </Box>
           </Box>
         )}

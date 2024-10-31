@@ -26,6 +26,12 @@ class PokemonService {
 
     return res.data;
   }
+
+  async getPokemonDescription({ name }: { name: string }) {
+    const res = await instance.get(`/pokemon-species/${name}`);
+
+    return res.data;
+  }
 }
 
 const pokemonService = new PokemonService();
