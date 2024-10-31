@@ -57,7 +57,7 @@ export default function PokemonListPage() {
   return (
     <div>
       <header className={styles.pageHeader}>
-        <Typography variant="h4">Pokemon List page</Typography>
+        <Typography variant="h4">Hack Tech Pokemons</Typography>
       </header>
       <main className={styles.content}>
         {!pokemons ? (
