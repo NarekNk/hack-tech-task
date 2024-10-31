@@ -62,7 +62,7 @@ export default function SpecificPokemonPage() {
           id: String(params.id),
         });
 
-        await fetchAdditionalInfo(data.name);
+        fetchAdditionalInfo(data.name);
 
         setPokemonInfo(data);
       } catch (error) {
